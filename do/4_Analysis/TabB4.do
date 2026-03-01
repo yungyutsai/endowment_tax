@@ -1,0 +1,81 @@
+if "`c(username)'" == "yungyu"{
+	global rdata "/Users/yungyu/Dropbox/02 Research/dissertation/Project/endowment_tax/rdata"
+	global wdata "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/wdata"
+	global figure "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/figures"
+	global table "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/table"
+	global tex "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/tables"
+	global do "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/do"
+	adopath + "$do/ado"
+}
+graph set eps fontface Times
+
+use "$wdata/endowment_tax_main_sample.dta", clear
+
+keep if wealthy == 0
+
+gen studentcutoff = 500
+gen assetcutoff = .
+
+foreach i in 5000 10000 50000 100000 200000{
+	cap rm "$table/TabB4_`i'.txt"
+	cap rm "$table/TabB4_`i'.xls"
+	
+	replace assetcutoff = `i'
+	replace large = enrollfte2016 >= studentcutoff
+	replace wealthy = endowmentpers2016 >= assetcutoff	
+	replace LargeWealthyPost = large == 1 & wealthy == 1 & year >= 2018
+	
+	foreach y in exptotpers expgrtpers revtotpers revtuipers tuition3 tuition7{
+		sum `y' if large == 1 & wealthy == 1 & year == 2016
+		loc m: dis %15.1fc r(mean)/1000
+		reghdfe ln`y' LargeWealthyPost, a(large#year wealthy#year unitid) cl(unitid)
+		outreg2 using "$table/TabB4_`i'.xls", append dec(3) nocon addtext(baseline,"`m'") alpha(0.001, 0.01, 0.05)
+	}
+}
+
+
+import delimited using "$table/TabB4_400000.txt",clear
+save "$table/dta/TableB4.dta", replace
+import delimited using "$table/TabB4_100000.txt",clear
+ap using "$table/dta/TableB4.dta"
+save "$table/dta/TableB4.dta", replace
+import delimited using "$table/TabB4_50000.txt",clear
+ap using "$table/dta/TableB4.dta"
+save "$table/dta/TableB4.dta", replace
+import delimited using "$table/TabB4_10000.txt",clear
+ap using "$table/dta/TableB4.dta"
+save "$table/dta/TableB4.dta", replace
+import delimited using "$table/TabB4_5000.txt",clear
+ap using "$table/dta/TableB4.dta"
+save "$table/dta/TableB4.dta", replace
+
+drop if v1 == "R-squared"
+keep if inrange(_n,3,5) | inrange(_n,13,15) | inrange(_n,23,25)  | inrange(_n,33,35)  | inrange(_n,43,45) | inrange(_n,47,48)
+
+replace v1 = "\multicolumn{7}{@{}l}{\bfseries Panel A: Pseudo Asset Threshold at \$5,000}" in 1
+replace v1 = "\multicolumn{7}{@{}l}{\bfseries Panel B: Pseudo Asset Threshold at \$10,000}" in 4
+replace v1 = "\multicolumn{7}{@{}l}{\bfseries Panel C: Pseudo Asset Threshold at \$50,000}" in 7
+replace v1 = "\multicolumn{7}{@{}l}{\bfseries Panel D: Pseudo Asset Threshold at \$100,000}" in 10
+replace v1 = "\multicolumn{7}{@{}l}{\bfseries Panel E: Pseudo Asset Threshold at \$400,000}" in 13
+
+replace v1 = "$ Large\times Wealthy \times Post $" in 2
+replace v1 = "$ Large\times Wealthy \times Post $" in 5
+replace v1 = "$ Large\times Wealthy \times Post $" in 8
+replace v1 = "$ Large\times Wealthy \times Post $" in 11
+replace v1 = "$ Large\times Wealthy \times Post $" in 14
+replace v1 = "Baseline Mean (1,000)" in 17
+replace v1 = "Number of Observations" in 16
+
+loc title = "Placebo Test: Pseudo Asset Threshold"
+loc head = " & (1) & (2) & (3) & (4) & (5) & (6) \\ \cmidrule(l){2-7} & \multicolumn{2}{c}{Log Exp. per Student} & \multicolumn{2}{c}{Log Rev. per Student} & \multicolumn{2}{c}{Listed Tuition} \\ \cmidrule(rl){2-3} \cmidrule(rl){4-5} \cmidrule(l){6-7} Outcome Variables: & Total & Grants & Total & Tuition & Undergrad & Graduate"
+
+texsaveyt 	_all using "$tex/TabB4_temp.tex", replace ///
+				title ("`title'") nonames ///
+				headerlines("`head'") ///
+				bottomlines("`bottom'") ///
+				hlines(0 3 6 9 12 15 15) nofix size(footnotesize) align(@{}lcccccc@{}) ///
+				label(tab.placebo) frag rh(1.2) cs(2.5) ///
+				footnote("Standard error in parentheses. \\ ***$$p<0.001$, **$$p<0.01$, *$$p<0.05$")
+				
+filefilter "$tex/TabB4_temp.tex" "$tex/TabB4.tex", from("&&&&&&") to("") replace
+rm "$tex/TabB4_temp.tex"
