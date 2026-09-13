@@ -25,17 +25,21 @@ gen drop = 0
 replace drop = 1 if large == 1 & wealthy == 1 & tryear != 2018
 replace drop = 1 if (large != 1 | wealthy != 1) & tryear != .
 
-keep instnm enrollfte endowment persendowment tax* drop
+gen previnv = revinv / revtot * 100
+
+keep instnm enrollfte endowment persendowment revinv previnv tax* drop
 rename enrollfte fte
 
 replace persendowment = endowment / fte if persendowment == .
 replace endowment = endowment/1000000
 replace persendowment = persendowment/1000
+replace revinv = revinv/1000000
 
 format fte %15.0fc
-format endowment persendowment %15.2fc
+format previnv %15.2fc
+format endowment persendowment revinv %15.2fc
 
-order instnm fte endowment persendowment
+order instnm fte endowment persendowment revinv previnv
 drop if endowment == . | endowment == 0
 gsort -persendowment
 
@@ -45,50 +49,43 @@ replace group = 2 if fte >= 500 & persendowment < 500
 replace group = 3 if fte < 500 & persendowment >= 500
 replace group = 4 if fte < 500 & persendowment < 500
 
-keep if drop == 1
+
+keep if group == 1 | group == 3
+drop if drop == 1
 gsort group -persendowment
  
 by group: gen row = _n
 
-loc N = _N + 3
+loc N = _N + 2
 set obs `N'
 recode row . = 0
-replace group = mod(_n,3) if group == .
-recode group 0=3
-recode group 4=3
+replace group = mod(_n,2) if group == .
+recode group 0=2
 
 gsort group row
 
 replace instnm = "\multicolumn{4}{@{}l}{\textbf{Panel A: Large \& Wealthy}}" if group == 1 & row == 0
-replace instnm = "\multicolumn{4}{@{}l}{\textbf{Panel B: Large \& Non-Wealthy}}" if group == 2 & row == 0
-replace instnm = "\multicolumn{4}{@{}l}{\textbf{Panel C: Small \& Non-Wealthy}}" if group == 3 & row == 0
+replace instnm = "\multicolumn{4}{@{}l}{\textbf{Panel B: Small \& Wealthy}}" if group == 2 & row == 0
 
-keep instnm fte endowment persendowment tax*
+keep instnm fte endowment persendowment revinv previnv
 
-tostring _all, replace force format(%15.0fc)
+tostring fte endowment persendowment revinv, replace force format(%15.0fc)
+tostring previnv, replace force format(%15.2fc)
 
-
-forv i = 2018(1)2022{
-	replace tax`i' = "Y" if tax`i' == "1"
-	replace tax`i' = "N" if tax`i' == "0"
-	replace tax`i' = "" if tax`i' == "."
-}
-
-
-foreach x in fte endowment persendowment{
+foreach x in fte endowment persendowment revinv previnv{
 	replace `x' = "" if `x' == "."
 }
 
-loc title = "List of Treatment Status Switcher"
-loc head = " Institution Name & & \multicolumn{1}{c}{\multirow{2}[0]{*}{\begin{tabular}{c}FTE \\Student \\Enrollment\end{tabular}}} & \multicolumn{1}{c}{\multirow{2}[0]{*}{\begin{tabular}{c}Endowment \\Assets\\(\$ Million) \end{tabular}}} & \multicolumn{1}{c}{\multirow{2}[0]{*}{\begin{tabular}{c}Asset per \\Student\\(\$ Thousand) \end{tabular}}} & \multicolumn{5}{c}{Tax Status} \\ \\[-1em] \cmidrule(){5-9}  & & & & 2018 & 2019 & 2020 & 2021 & 2022 \\ \\[-1em]" 
+loc title = "List of Wealthy Colleges in Sample"
+loc head = " Institution Name & FTE Student & Endowment (\$1M) & Endowment per Studnet (\$1K) & Investment Revenue (\$1M) & % Invt. to Tot Rev." 
 
-texsaveyt 	_all using "$tex/TabC2_temp.tex", replace ///
+texsaveyt 	_all using "$tex/TabA3_temp.tex", replace ///
 				title ("`title'") nonames ///
 				headerlines("`head'") ///
 				bottomlines("`bottom'") ///
-				hlines(0 2 24) nofix size(footnotesize) align(@{}lcccccccc@{}) ///
+				hlines(0 32) nofix size(scriptsize) align(@{}lccc@{}) ///
 				label(tab.exp) frag rh(1.2) cs(1) ///
 				footnote("")
 				
-filefilter "$tex/TabC2_temp.tex" "$tex/TabC2.tex", from("&&&&&&&&") to("") replace
-rm "$tex/TabC2_temp.tex"
+filefilter "$tex/TabA3_temp.tex" "$tex/TabA3.tex", from("&&&&&") to("") replace
+rm "$tex/TabA3_temp.tex"

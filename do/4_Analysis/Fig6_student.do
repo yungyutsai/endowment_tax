@@ -11,13 +11,13 @@ graph set eps fontface Times
 
 use "$wdata/endowment_tax_main_sample.dta", clear
 
-cap rm "$table/Fig4.xls"
-cap rm "$table/Fig4.txt"
+cap rm "$table/Fig6.xls"
+cap rm "$table/Fig6.txt"
 
 foreach y in enrollfte{
 	
 	reghdfe ln`y' LargeWealthy20*, a(large#year wealthy#year unitid) cl(unitid)
-	outreg2 using "$table/Fig4.xls", append dec(3) nocon
+	outreg2 using "$table/Fig6.xls", append dec(3) nocon
 	
 }
 
@@ -26,12 +26,12 @@ keep if large == 1
 foreach y in enrollfte{
 	
 	reghdfe ln`y' LargeWealthy20*, a(year unitid) cl(unitid)
-	outreg2 using "$table/Fig4.xls", append dec(3) nocon
+	outreg2 using "$table/Fig6.xls", append dec(3) nocon
 	
 }
 
 
-import delimited using "$table/Fig4.txt",clear
+import delimited using "$table/Fig6.txt",clear
 
 rename v2 lnDDD
 rename v3 lnDD
@@ -73,7 +73,7 @@ twoway 	(connect b year if var == "DD", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig4_DD.jpg", as(jpg) replace
+graph export "$figure/Fig6_DD.jpg", as(jpg) replace width(2400)
 
 
 twoway 	(connect b year if var == "DDD", color(black)) ///
@@ -83,5 +83,5 @@ twoway 	(connect b year if var == "DDD", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig4_DDD.jpg", as(jpg) replace
+graph export "$figure/Fig6_DDD.jpg", as(jpg) replace width(2400)
 

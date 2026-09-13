@@ -1,10 +1,10 @@
 if "`c(username)'" == "yungyu"{
-	global rdata "/Users/yungyu/Dropbox/02 Research/dissertation/Project/endowment_tax/rdata"
-	global wdata "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/wdata"
-	global figure "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/figures"
-	global table "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/table"
-	global tex "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/tables"
-	global do "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/do"
+	global rdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/rdata"
+	global wdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/wdata"
+	global figure "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/figures"
+	global table "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/table"
+	global tex "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/tables"
+	global do "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/do"
 	adopath + "$do/ado"
 }
 if "`c(username)'" == "ytvxq"{
@@ -38,4 +38,4 @@ twoway 	(scatteri 17.8 6.24 17.8 11.35 13.18 11.35 13.18 6.24, recast(area) lw(0
 		legend(off) ///
 		xtitle(Student Enrollment (log scale)) ytitle(Endowment Assets Per-student (log scale)) ///
 		text(15.8 8.8 "Subjected to the Tax", color(maroon))
-graph export "$figure/Fig1.jpg", as(jpg) replace
+graph export "$figure/Fig1.jpg", as(jpg) replace width(2400)

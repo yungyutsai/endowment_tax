@@ -1,10 +1,10 @@
 if "`c(username)'" == "yungyu"{
-	global rdata "/Users/yungyu/Dropbox/02 Research/dissertation/Project/endowment_tax/rdata"
-	global wdata "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/wdata"
-	global figure "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/figures"
-	global table "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/table"
-	global tex "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/tables"
-	global do "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/do"
+	global rdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/rdata"
+	global wdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/wdata"
+	global figure "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/figures"
+	global table "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/table"
+	global tex "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/tables"
+	global do "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/do"
 	adopath + "$do/ado"
 }
 graph set eps fontface Times
@@ -71,7 +71,7 @@ twoway 	(connect b year if var == "exptot", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_exptot.jpg", as(jpg) replace
+graph export "$figure/Fig3_exptot.jpg", as(jpg) replace width(2400)
 
 
 replace year = year - 0.1 if var == "expgrt"
@@ -86,7 +86,7 @@ twoway 	(connect b year if var == "expgrt", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_expgrt.jpg", as(jpg) replace
+graph export "$figure/Fig3_expgrt.jpg", as(jpg) replace width(2400)
 
 
 
@@ -102,7 +102,7 @@ twoway 	(connect b year if var == "expres", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_expres.jpg", as(jpg) replace
+graph export "$figure/Fig3_expres.jpg", as(jpg) replace width(2400)
 
 
 replace year = year - 0.1 if var == "expins"
@@ -117,7 +117,7 @@ twoway 	(connect b year if var == "expins", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_expins.jpg", as(jpg) replace
+graph export "$figure/Fig3_expins.jpg", as(jpg) replace width(2400)
 
 
 
@@ -133,7 +133,7 @@ twoway 	(connect b year if var == "revtot", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_revtot.jpg", as(jpg) replace
+graph export "$figure/Fig3_revtot.jpg", as(jpg) replace width(2400)
 
 
 replace year = year - 0.1 if var == "revtui"
@@ -148,4 +148,4 @@ twoway 	(connect b year if var == "revtui", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_revtui.jpg", as(jpg) replace
+graph export "$figure/Fig3_revtui.jpg", as(jpg) replace width(2400)

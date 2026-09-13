@@ -272,7 +272,25 @@ egen tryear = min(v1), by(unitid)
 
 save "$wdata/endowment_tax_final_sample.dta", replace
 
-drop if large == 1 & wealthy == 1 & tryear != 2018
+use "$wdata/endowment_tax_final_sample.dta", clear
+
+unique unitid
+unique unitid if tryear != 2018 & tryear != .
+
+tab instnm if tryear != 2018 & tryear != .
+
+drop if tryear != 2018 & tryear != .
+unique unitid
+
+//unique unitid if large == 1 & wealthy == 1 & tryear != 2018
+
+unique unitid if (large != 1 | wealthy != 1) & tryear != .
+unique unitid if (large == 1 & wealthy == 1) & tryear == .
+
+tab instnm if ((large != 1 | wealthy != 1) & tryear != .) | ((large == 1 & wealthy == 1) & tryear == .)
+
 drop if (large != 1 | wealthy != 1) & tryear != .
+drop if (large == 1 & wealthy == 1) & tryear == .
+unique unitid
 
 save "$wdata/endowment_tax_main_sample.dta", replace

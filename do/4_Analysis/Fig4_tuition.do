@@ -1,27 +1,27 @@
 if "`c(username)'" == "yungyu"{
-	global rdata "/Users/yungyu/Dropbox/02 Research/dissertation/Project/endowment_tax/rdata"
-	global wdata "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/wdata"
-	global figure "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/figures"
-	global table "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/table"
-	global tex "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/content/tables"
-	global do "/Users/yungyu/dropbox/02 Research/dissertation/Project/endowment_tax/do"
+	global rdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/rdata"
+	global wdata "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/wdata"
+	global figure "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/figures"
+	global table "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/table"
+	global tex "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/content/tables"
+	global do "/Users/yungyu/Library/CloudStorage/Dropbox/02 Research/education/endowment_tax/do"
 	adopath + "$do/ado"
 }
 graph set eps fontface Times
 
 use "$wdata/endowment_tax_main_sample.dta", clear
 
-cap rm "$table/Fig3-2.xls"
-cap rm "$table/Fig3-2.txt"
+cap rm "$table/Fig4.xls"
+cap rm "$table/Fig4.txt"
 
 foreach y in tuition2 tuition3 tuition6 tuition7 chg5ay3{
 	
 	reghdfe ln`y' LargeWealthy20*, a(large#year wealthy#year unitid) cl(unitid)
-	outreg2 using "$table/Fig3-2.xls", append dec(3) nocon
+	outreg2 using "$table/Fig4.xls", append dec(3) nocon
 	
 }
 
-import delimited using "$table/Fig3-2.txt",clear
+import delimited using "$table/Fig4.txt",clear
 
 forv i = 2(1)6{
 	loc var: dis v`i'[2]
@@ -69,7 +69,7 @@ twoway 	(connect b year if var == "tuition2", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_tuition_under.jpg", as(jpg) replace
+graph export "$figure/Fig4_tuition_under.jpg", as(jpg) replace width(2400)
 
 
 replace year = year - 0.1 if var == "tuition6"
@@ -84,7 +84,7 @@ twoway 	(connect b year if var == "tuition6", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_tuition_grad.jpg", as(jpg) replace
+graph export "$figure/Fig4_tuition_grad.jpg", as(jpg) replace width(2400)
 
 
 
@@ -95,4 +95,4 @@ twoway 	(connect b year if var == "chg5ay3", color(black)) ///
 		ytitle(Estimated Effect) ///
 		scheme(s1color) yline(0, lc(black)) xline(2016.5, lc(black)) ///
 		xlabel(2010(1)2022) xtitle(Year)
-graph export "$figure/Fig3_chg5ay3.jpg", as(jpg) replace
+graph export "$figure/Fig4_chg5ay3.jpg", as(jpg) replace width(2400)
