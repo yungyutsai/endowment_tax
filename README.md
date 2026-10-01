@@ -1,6 +1,7 @@
 # Who Pays When the Government Taxes Colleges?
 
 This repository contains datasets and code for the paper titled "Who Pays When the Government Taxes Colleges?" 
+The paper is available at: https://www.tandfonline.com/doi/full/10.1080/00221546.2026.2739118
 
 # Data Availability
 
